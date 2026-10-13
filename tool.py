@@ -1,46 +1,90 @@
 
 # tool.py - ミニ便利ツール
 import random
+import random
 
+from rich.console import Console
+from rich.panel import Panel
+from rich.prompt import Prompt
+from rich.table import Table
+
+console = Console()
 
 def number_guess_game():
-    print("\n=== 数あてゲーム ===")
-    print("1〜100の数字を当ててください！")
+    console.print(
+        Panel(
+            "[bold cyan]1〜100の数字を当ててください！[/bold cyan]\n"
+            "正解するまでヒントを出します。",
+            title="[bold white]数あてゲーム[/bold white]",
+            border_style="cyan",
+        )
+    )
 
     answer = random.randint(1, 100)
     attempts = 0
 
     while True:
         try:
-            guess = int(input("数字を入力してください: "))
+            guess = int(
+                Prompt.ask("[bold yellow]数字を入力してください[/bold yellow]")
+            )
         except ValueError:
-            print("数字を入力してください！")
+            console.print(
+                "[bold red]数字を入力してください！[/bold red]"
+            )
             continue
 
         if guess < 1 or guess > 100:
-            print("1〜100の範囲で入力してください！")
+            console.print(
+                "[bold red]1〜100の範囲で入力してください！[/bold red]"
+            )
             continue
 
         attempts += 1
 
         if guess < answer:
-            print("もっと大きい数字です！")
+            console.print(
+                "[yellow]もっと大きい数字です！[/yellow]"
+            )
         elif guess > answer:
-            print("もっと小さい数字です！")
+            console.print(
+                "[yellow]もっと小さい数字です！[/yellow]"
+            )
         else:
-            print(f"正解！{attempts}回で当たりました！")
+            console.print(
+                Panel(
+                    f"[bold green]正解！[/bold green]\n"
+                    f"{attempts}回で当たりました！",
+                    title="[bold green]CLEAR![/bold green]",
+                    border_style="green",
+                )
+            )
             break
 
 
-print("=== ミニ便利ツール ===")
-print("1: あいさつ")
-print("2: 整数の足し算")
-print("3: 文字数カウント")
-print("4: 数あてゲーム")
-print("5: じゃんけん")
-print("9: 終了")
 
-choice = input("メニュー番号を入力してください: ")
+menu = Table(
+    title="ミニ便利ツール",
+    border_style="bright_blue",
+    show_header=True,
+    header_style="bold cyan",
+)
+
+menu.add_column("番号", justify="center", style="bold yellow")
+menu.add_column("機能", style="white")
+
+menu.add_row("1", "あいさつ")
+menu.add_row("2", "整数の足し算")
+menu.add_row("3", "文字数カウント")
+menu.add_row("4", "数あてゲーム")
+menu.add_row("5", "じゃんけん")
+menu.add_row("9", "終了")
+
+console.print(menu)
+
+choice = Prompt.ask(
+    "[bold cyan]メニュー番号を入力してください[/bold cyan]"
+)
 
 if choice == "1":
     print("こんにちは！Gitチーム開発演習中です。")
